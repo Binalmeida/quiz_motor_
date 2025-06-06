@@ -1,6 +1,9 @@
 # Importa bibliotecas necessárias G
 import pygame
 import sys
+import streamlit as st
+
+st.title('Jogo Motor')
 
 # Verifica se foi enviado o tipo de ligação automaticamente (streamlit) M
 if len(sys.argv) > 1:
