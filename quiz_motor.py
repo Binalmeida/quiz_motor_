@@ -2,10 +2,10 @@ import streamlit as st
 import subprocess
 import psutil
 
-# essa linha configura o visual da pagina do streamlit (titulo, layout, e icone) I
+# Configurações da página
 st.set_page_config(page_title="Quiz Motor 6 Fios", page_icon="⚙️", layout="centered")
 
-# CSS M
+# CSS personalizado
 st.markdown("""
     <style>
     body, .stApp {
@@ -66,13 +66,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# TÍTULO I
+# Título
 st.title("⚙️ Quiz: Motor Trifásico de 6 Fios")
 st.markdown("### 🧠 Tema: **Conexões Estrela e Triângulo em Motores Trifásicos de 6 Pontas**")
 st.markdown("---")
 st.write("Responda com **Sim** ou **Não** às perguntas abaixo.")
 
-# PERGUNTAS G
+# Lista de perguntas
 perguntas = [
     ("Em uma ligação estrela, os enrolamentos recebem menor tensão que a rede?", True,
     "Sim. Em estrela, a tensão nos enrolamentos é menor que a tensão de linha da rede."),
@@ -96,7 +96,7 @@ perguntas = [
     "Sim. A tensão de linha de 660 V resulta em cerca de 380 V nos enrolamentos em estrela.")
 ]
 
-# ESTADOS INICIAIS (CONTROLAR, ARMAZENAR E GUARDAR) M
+# Estado da sessão
 if "indice" not in st.session_state:
     st.session_state.indice = 0
 if "pontuacao" not in st.session_state:
@@ -110,8 +110,7 @@ if "pontuou" not in st.session_state:
 if "historico_pontuacao" not in st.session_state:
     st.session_state.historico_pontuacao = []
 
-
-#PAGINA DO JOGO NÃO PODE SER ABERTA MAIS DE UMA VEZ G
+# Verifica se processo do jogo já está em execução
 def is_process_running(script_name):
     for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
         try:
@@ -121,7 +120,7 @@ def is_process_running(script_name):
             continue
     return False
 
-# EXECUÇÃO DO QUIZ G
+# Execução do quiz
 if st.session_state.indice < len(perguntas):
     pergunta, resposta_correta, explicacao = perguntas[st.session_state.indice]
 
@@ -158,10 +157,8 @@ if st.session_state.indice < len(perguntas):
             st.session_state.pontuou = False
             st.rerun()
 
-
-
+# Final do quiz
 else:
-    # FINAL DO QUIZ M
     pontuacao_final = st.session_state.pontuacao * 10
     st.balloons()
     st.success(f"🎉 Quiz finalizado! Sua pontuação: {pontuacao_final} de 100")
@@ -174,6 +171,7 @@ else:
         st.write(f"{i}. {p} pontos")
 
     col1, col2 = st.columns(2)
+
     with col1:
         if st.button("🔁 Recomeçar"):
             st.session_state.indice = 0
@@ -183,16 +181,16 @@ else:
             st.session_state.pontuou = False
             st.rerun()
 
-        with col2:
-            if st.button("🎮 Iniciar o Jogo de Conexão"):
-                try:
-                    if not is_process_running("jogo_motor.py"):
-                        subprocess.Popen(["python", "jogo_motor.py"])
-                        st.success("Iniciando o jogo em uma nova janela...")
-                    else:
-                        st.error("O jogo já está rodando.")
-                except Exception as e:
-                    st.error(f"Pipipopo Erro {e}")
+    with col2:
+        if st.button("🎮 Iniciar o Jogo de Conexão"):
+            try:
+                if not is_process_running("jogo_motor.py"):
+                    subprocess.Popen(["python", "jogo_motor.py"])
+                    st.success("Iniciando o jogo em uma nova janela...")
+                else:
+                    st.error("O jogo já está rodando.")
+            except Exception as e:
+                st.error(f"Pipipopo Erro {e}")
 
 
 
